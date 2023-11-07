@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-## **Compthinking2 Assessment: Where did birds hatch?** 
+## **Compthinking2 Assessment: Where did birds hatch?**
 
 ## 
 
@@ -44,7 +44,7 @@ bloy_chicks <- tibble(
   arrange(survey, beach)
 ```
 
-**Q1** We\'re randomly generating data, but we\'re all going to end up with the same data frames. How is that happening?
+**Q1** We're randomly generating data, but we're all going to end up with the same data frames. How is that happening?
 
 *This is happening because the random generation is not exactly random, but depends on time and the "seed". By setting the seed, we make the results repeatable because all random generation will produce the same output.*
 
@@ -68,7 +68,7 @@ birds <- paste0(
 
 ### **Without a custom function**
 
-We want to estimate where chicks hatched using `tidyverse` functions. Here\'s our process:
+We want to estimate where chicks hatched using `tidyverse` functions. Here's our process:
 
 1.  For each bird, where was it seen most often?
 
@@ -92,7 +92,7 @@ beach_early <- bloy_chicks %>%
   summarize(earliest = min(survey),
             .groups = "drop")
 
-# Join the two conditions and retain most frequent beach, only earliest. NOTE: I THINK THIS ISN'T WORKING CORRECTLY!!
+# Join the two conditions and retain most frequent beach, only earliest. 
 
 hatch_beach <- beach_freq %>% 
       left_join(beach_early, 
@@ -110,8 +110,32 @@ find_hatching_beach <- function(site, date) {
   # Start with a data frame (or tibble) of site and date for *one* bird. Use pipes and dplyr functions to find the hatching beach
   bird_observations <- tibble(site, date)
   result <- bird_observations %>% 
-    filter(date = min(date))
+    distinct() %>% 
+    group_by(site) %>% 
+    summarise(n_observations = n(), 
+              min_date = min(date)) %>% 
+    filter(n_observations == max(n_observations)) %>% 
+    filter(min_date == min(min_date)) %>% 
+    sample_n(1) %>% 
+      ungroup()
+    
   # result should end up as a data frame with one row for the hatching beach
   return(result$site) # return the hatching beach
 }
+
+
+# split-apply-combine
+bloy_chicks %>% 
+  group_by(bird) %>% 
+  summarize(hatching_beach = find_hatching_beach(beach, survey))
 ```
+
+**Q5** The two *parameters* of `find_hatching_beach()` are named `site` and `date`. When this function is called, what columns in `bloy_chicks` will you use as *arguments* for these parameters?
+
+We will call beach and survey.
+
+**Q6** What will be the value of `site` when `find_hatching_beach()` is called on the group for bird YWG? How about WYB?
+
+YWG: Mitchell's
+
+WYB: Mitchell's
