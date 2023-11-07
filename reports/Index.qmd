@@ -6,8 +6,6 @@ editor: visual
 
 ## **Compthinking2 Assessment: Where did birds hatch?**
 
-## 
-
 First, simulate data
 
 ```{r}
@@ -101,6 +99,7 @@ hatch_beach <- beach_freq %>%
       filter(earliest == min(earliest)) %>% 
       sample_n(1) %>% 
       ungroup()
+hatch_beach
 ```
 
 ## **With a custom function**
@@ -132,10 +131,10 @@ bloy_chicks %>%
 
 **Q5** The two *parameters* of `find_hatching_beach()` are named `site` and `date`. When this function is called, what columns in `bloy_chicks` will you use as *arguments* for these parameters?
 
-We will call beach and survey.
+*We will use columns beach and survey as arguments for these parameters.*
 
 **Q6** What will be the value of `site` when `find_hatching_beach()` is called on the group for bird YWG? How about WYB?
 
-YWG: Mitchell's
+*YWG: Mitchell's*
 
-WYB: Mitchell's
+*WYB: Mitchell's*

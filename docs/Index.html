@@ -125,9 +125,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="compthinking2-assessment-where-did-birds-hatch" class="level2">
 <h2 class="anchored" data-anchor-id="compthinking2-assessment-where-did-birds-hatch"><strong>Compthinking2 Assessment: Where did birds hatch?</strong></h2>
-</section>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section"></h2>
 <p>First, simulate data</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -220,35 +217,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(bird) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(earliest <span class="sc">==</span> <span class="fu">min</span>(earliest)) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sample_n</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>hatch_beach</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 4
+   bird  beach               n earliest  
+   &lt;chr&gt; &lt;chr&gt;           &lt;int&gt; &lt;date&gt;    
+ 1 BBK   Cowell's            2 2023-06-29
+ 2 BKY   Steamer Lane        2 2023-06-08
+ 3 BYK   Cowell's            3 2023-06-01
+ 4 GYB   Cowell's            1 2023-06-29
+ 5 KKW   Natural Bridges     5 2023-07-06
+ 6 KYW   Main                4 2023-06-15
+ 7 WYB   Mitchell's          2 2023-06-01
+ 8 YBK   Natural Bridges     4 2023-06-01
+ 9 YBW   Main                2 2023-06-01
+10 YBY   Natural Bridges     3 2023-08-10
+11 YKG   Main                3 2023-06-08
+12 YWG   Mitchell's          2 2023-06-01</code></pre>
+</div>
 </div>
 </section>
 </section>
 <section id="with-a-custom-function" class="level2">
 <h2 class="anchored" data-anchor-id="with-a-custom-function"><strong>With a custom function</strong></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>find_hatching_beach <span class="ot">&lt;-</span> <span class="cf">function</span>(site, date) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Start with a data frame (or tibble) of site and date for *one* bird. Use pipes and dplyr functions to find the hatching beach</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  bird_observations <span class="ot">&lt;-</span> <span class="fu">tibble</span>(site, date)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> bird_observations <span class="sc">%&gt;%</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_observations =</span> <span class="fu">n</span>(), </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">min_date =</span> <span class="fu">min</span>(date)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n_observations <span class="sc">==</span> <span class="fu">max</span>(n_observations)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(min_date <span class="sc">==</span> <span class="fu">min</span>(min_date)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_n</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># result should end up as a data frame with one row for the hatching beach</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result<span class="sc">$</span>site) <span class="co"># return the hatching beach</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># split-apply-combine</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>bloy_chicks <span class="sc">%&gt;%</span> </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(bird) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">hatching_beach =</span> <span class="fu">find_hatching_beach</span>(beach, survey))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>find_hatching_beach <span class="ot">&lt;-</span> <span class="cf">function</span>(site, date) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Start with a data frame (or tibble) of site and date for *one* bird. Use pipes and dplyr functions to find the hatching beach</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  bird_observations <span class="ot">&lt;-</span> <span class="fu">tibble</span>(site, date)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> bird_observations <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_observations =</span> <span class="fu">n</span>(), </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">min_date =</span> <span class="fu">min</span>(date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n_observations <span class="sc">==</span> <span class="fu">max</span>(n_observations)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(min_date <span class="sc">==</span> <span class="fu">min</span>(min_date)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_n</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># result should end up as a data frame with one row for the hatching beach</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result<span class="sc">$</span>site) <span class="co"># return the hatching beach</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># split-apply-combine</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>bloy_chicks <span class="sc">%&gt;%</span> </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(bird) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">hatching_beach =</span> <span class="fu">find_hatching_beach</span>(beach, survey))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 2
    bird  hatching_beach 
@@ -268,10 +283,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p><strong>Q5</strong> The two <em>parameters</em> of <code>find_hatching_beach()</code> are named <code>site</code> and <code>date</code>. When this function is called, what columns in <code>bloy_chicks</code> will you use as <em>arguments</em> for these parameters?</p>
-<p>We will call beach and survey.</p>
+<p><em>We will use columns beach and survey as arguments for these parameters.</em></p>
 <p><strong>Q6</strong> What will be the value of <code>site</code> when <code>find_hatching_beach()</code> is called on the group for bird YWG? How about WYB?</p>
-<p>YWG: Mitchell’s</p>
-<p>WYB: Mitchell’s</p>
+<p><em>YWG: Mitchell’s</em></p>
+<p><em>WYB: Mitchell’s</em></p>
 </section>
 
 </main>
